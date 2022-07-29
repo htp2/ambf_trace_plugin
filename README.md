@@ -47,7 +47,10 @@ cd <ambf_exe_dir>
 ```
 
 Test static trace:
+```bash
+cd <ambf_exe_dir>
 ./ambf_simulator --plugins <plugin_path>/build/libambf_trace_plugin.so --csv_filename_static_traces <plugin_path>/example_static_trace.csv
+```
 
 ### Input args
 1. ```--name_body_to_trace arg``` : Name of body in ADF yaml which will have position traced. No body trace if blank (default)

@@ -95,7 +95,7 @@ class afTracePlugin: public afSimulatorPlugin{
     virtual void keyboardUpdate(GLFWwindow* a_window, int a_key, int a_scancode, int a_action, int a_mods) override{
     // TODO: standardize keybindings
         if (a_mods == GLFW_MOD_CONTROL){
-            if (a_key == GLFW_KEY_KP_MULTIPLY) { //TODO: this should spawn a new segment and init its first vertex to current point
+            if (a_key == GLFW_KEY_KP_MULTIPLY) { 
             m_collect_tip_trace_enabled = !m_collect_tip_trace_enabled;
             if(m_collect_tip_trace_enabled && m_body_to_be_traced){
                 add_new_body_trace();
@@ -183,7 +183,7 @@ class afTracePlugin: public afSimulatorPlugin{
     void add_new_body_trace(){
         m_body_trace = new cMultiSegment();
         m_chaiWorldPtr->addChild(m_body_trace);  // create segment for trace
-        m_body_trace->newVertex(m_body_to_be_traced->getLocalPos()); // initalize with current position TODO: This may not be ideal, maybe should be initialized when first enabled
+        m_body_trace->newVertex(m_body_to_be_traced->getLocalPos()); // initalize with current position
         cColorf color;
         color.setRedCrimson(); // TODO: settable
         m_body_trace->setLineColor(color);

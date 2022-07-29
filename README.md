@@ -22,7 +22,9 @@ https://user-images.githubusercontent.com/17507145/181808787-0f53f7b9-6a76-4ad7-
 ## Building
 Find most updated instructions for building AMBF on that git repository (https://github.com/WPI-AIM/ambf)
 
-This can be built stand-alone or in a catkin workspace. Instructions below are for a stand-alone build
+This plugin can be built stand-alone or in a catkin workspace. 
+
+### Stand-Alone build
 
 ```git clone``` this repository ```<plugin_path>``` onto your machine
 
@@ -32,6 +34,15 @@ mkdir build && cd build
 cmake ..
 make
 ```
+
+### Build within a catkin workspace (ROS1)
+A simple ```package.xml``` has been included in this repository to enable catkin to find and build it
+```<plugin_path>``` should be located within ```catkin_ws/src/```
+```
+cd <catkin_ws>
+catkin build ambf_trace_plugin
+```
+
 ## Using plugin
 
 ### Starting plugin
@@ -75,4 +86,9 @@ plugins: [
 Then you can start the simulator using:
 ```bash
 ./ambf_simulator --launch_file <launch_file.yaml> [<-- plugin_args>]
+```
+
+NOTE if you built this plugin using catkin at location ```<catkin_ws>/src/ambf_trace_plugin```, the path will be
+```bash
+path: ../../build/ambf_trace_plugin/
 ```

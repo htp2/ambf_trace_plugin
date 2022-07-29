@@ -10,12 +10,14 @@ There are several features that still could be added (expressed in code TODOs), 
 
 ## Features:
 
-1. Show static trace at simulator startup
+1. Show static trace at simulator startup (example screenshot at startup)
 
 ![Screenshot 2022-07-29 12:54:50](https://user-images.githubusercontent.com/17507145/181807786-1c9732aa-82b2-4b81-a653-d35ea707df34.png)
 
-2. Dynamically and togglably trace the position of a body. This video shows toggling collection on and off and showing and hiding the trace
-https://user-images.githubusercontent.com/17507145/181806939-e4093bb1-ec27-4d9d-9b9d-a8f3483f4f1a.mp4
+2. Dynamically and togglably trace the position of a body. This example video shows toggling collection on and off and showing and hiding the trace
+
+https://user-images.githubusercontent.com/17507145/181808787-0f53f7b9-6a76-4ad7-938b-fe3041fa562a.mp4
+
 
 ## Building
 Find most updated instructions for building AMBF on that git repository (https://github.com/WPI-AIM/ambf)

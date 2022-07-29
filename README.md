@@ -92,3 +92,13 @@ NOTE if you built this plugin using catkin at location ```<catkin_ws>/src/ambf_t
 ```bash
 path: ../../build/ambf_trace_plugin/
 ```
+
+## Features to add
+Something I hope to get to someday (or you could do it too! :) )
+
+1. Allow passing in a list of bodies, for multiple traces
+2. Allow specification of color, line_width
+3. Make option for default on/off
+4. Allow for multiple static traces
+5. Have show/hide functionality also apply to static trace, or make both toggleable separately
+6. Allow for throttling of body trace (only happens every x frames)

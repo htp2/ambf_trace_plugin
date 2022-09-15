@@ -31,7 +31,7 @@ This plugin can be built stand-alone or in a catkin workspace.
 ```bash
 cd <plugin_path>
 mkdir build && cd build
-cmake ..
+cmake .. -DBUILD_PLUGIN_WITH_ROS=False
 make
 ```
 
@@ -92,6 +92,13 @@ NOTE if you built this plugin using catkin at location ```<catkin_ws>/src/ambf_t
 ```bash
 path: ../../build/ambf_trace_plugin/
 ```
+
+### Features if built with ROS
+For now, these features are included based on whether a compiler flag is set at build time. I think there is likely a cleaner way to do that, but unless/until things get long, this should not be an issue. 
+
+If built with ROS, the functionality to set the body trace to [show / hide] and [collect / don't collect] are accessible with ROS topics, in addition to the keyboard press
+
+By default, these topics are at ``` /ambf/trace_plugin/set_body_trace_collect ``` and ```/ambf/trace_plugin/set_body_trace_visible``` respectively, and accept messages of type ```std_msgs::Bool```
 
 ## Features to add
 Something I hope to get to someday (or you could do it too! :) )

@@ -44,6 +44,13 @@
 #include <boost/program_options.hpp>
 #include <fstream>
 
+#ifdef BUILD_WITH_ROS
+#include <std_msgs/Bool.h>
+#include <ros/ros.h>
+#include <ambf_server/RosComBase.h>
+#endif //BUILD_WITH_ROS
+
+
 using namespace ambf;
 
 //TODO: allow passing in a list of bodies, for multiple traces
@@ -52,7 +59,7 @@ using namespace ambf;
 class afTracePlugin: public afSimulatorPlugin{
     int init(int argc, char** argv, const afWorldPtr a_afWorld){
         namespace p_opt = boost::program_options;
-        p_opt::options_description cmd_opts("drilling_simulator Command Line Options");
+        p_opt::options_description cmd_opts("ambf_trace_plugin Command Line Options");
         cmd_opts.add_options()
                 ("info", "Show Info")
                 ("name_body_to_trace", p_opt::value<std::string>()->default_value(""), "Name of body given in yaml. No traces if blank")
@@ -89,6 +96,14 @@ class afTracePlugin: public afSimulatorPlugin{
                 add_new_body_trace();
             }
         }
+        #ifdef BUILD_WITH_ROS
+        m_rosNode = afROSNode::getNode();
+        std::string a_namespace = "ambf";
+        std::string a_plugin = "trace_plugin";
+        m_toggle_body_trace_collect_sub = m_rosNode->subscribe<std_msgs::Bool>(a_namespace + "/" + a_plugin + "/set_body_trace_collect",1, &afTracePlugin::trace_collect_callback, this);
+        m_toggle_body_trace_visibility_sub = m_rosNode->subscribe<std_msgs::Bool>(a_namespace + "/" + a_plugin + "/set_body_trace_visible",1, &afTracePlugin::trace_visible_callback, this);
+        #endif //BUILD_WITH_ROS
+
         return 1;
     }
 
@@ -96,19 +111,10 @@ class afTracePlugin: public afSimulatorPlugin{
     // TODO: standardize keybindings
         if (a_mods == GLFW_MOD_CONTROL){
             if (a_key == GLFW_KEY_KP_MULTIPLY) { 
-            m_collect_tip_trace_enabled = !m_collect_tip_trace_enabled;
-            if(m_collect_tip_trace_enabled && m_body_to_be_traced){
-                add_new_body_trace();
-            }
-            std::cout << "Collect Tip Trace Enabled State: " << m_collect_tip_trace_enabled << std::endl;
+                toggle_body_trace_collect_enabled();
             }
             else if (a_key == GLFW_KEY_KP_SUBTRACT) {
-                m_show_tip_trace_enabled = !m_show_tip_trace_enabled;
-                for(auto trace: m_body_trace_list){
-                    trace->setShowEnabled(m_show_tip_trace_enabled);
-                }
-                //TODO: also enable/disable static trace? Or make both toggleable separately?
-                std::cout << "Show Tip Trace Enabled State: " << m_show_tip_trace_enabled << std::endl;
+                toggle_body_trace_visibility();
             }   
         }
     }
@@ -132,6 +138,24 @@ class afTracePlugin: public afSimulatorPlugin{
     virtual void physicsUpdate(const afWorldPtr a_afWorld){}
     virtual void reset(){}
     virtual bool close(){return 0;}
+
+    void toggle_body_trace_collect_enabled(void){
+        m_collect_tip_trace_enabled = !m_collect_tip_trace_enabled;
+        if(m_collect_tip_trace_enabled && m_body_to_be_traced){
+            add_new_body_trace();
+        }
+        std::cout << "Collect Tip Trace Enabled State: " << m_collect_tip_trace_enabled << std::endl;
+    }
+
+    void toggle_body_trace_visibility(void){
+        m_show_tip_trace_enabled = !m_show_tip_trace_enabled;
+        for(auto trace: m_body_trace_list){
+            trace->setShowEnabled(m_show_tip_trace_enabled);
+        }
+        //TODO: also enable/disable static trace? Or make both toggleable separately?
+        std::cout << "Show Tip Trace Enabled State: " << m_show_tip_trace_enabled << std::endl;
+    }
+
 
     void set_and_add_static_trace(const std::string& csv_filename_static_traces, cMultiSegment* static_trace){
         std::ifstream f(csv_filename_static_traces.c_str());
@@ -200,6 +224,27 @@ class afTracePlugin: public afSimulatorPlugin{
     cMultiSegment* m_static_trace;
     cMultiSegment* m_body_trace;
     std::vector<cMultiSegment*> m_body_trace_list;
+
+    #ifdef BUILD_WITH_ROS
+    ros::NodeHandle* m_rosNode;
+    ros::Subscriber m_toggle_body_trace_collect_sub;
+    ros::Subscriber m_toggle_body_trace_visibility_sub;
+
+    void trace_collect_callback(std_msgs::Bool msg)
+    {
+        if(m_collect_tip_trace_enabled != msg.data){
+            toggle_body_trace_collect_enabled();
+        }
+    }
+
+    void trace_visible_callback(std_msgs::Bool msg)
+    {
+        if(m_show_tip_trace_enabled != msg.data){
+            toggle_body_trace_visibility();
+        }
+    }
+    #endif //BUILD_WITH_ROS
+
 };
 
 

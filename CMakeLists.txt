@@ -53,9 +53,13 @@ add_definitions(${AMBF_DEFINITIONS})
 # target_link_libraries (ambf_trace_plugin ${AMBF_LIBRARIES})
 
 add_library(ambf_trace_plugin SHARED ambf_trace_plugin.cpp)
-# add_dependencies(continuum_manip_volumetric_drilling_plugin ${catkin_EXPORTED_TARGETS})
-# target_link_libraries (ambf_trace_plugin ${Boost_LIBRARIES} ${AMBF_LIBRARIES} ${catkin_LIBRARIES})
 target_link_libraries (ambf_trace_plugin ${Boost_LIBRARIES} ${AMBF_LIBRARIES})
 set_property(TARGET ambf_trace_plugin PROPERTY POSITION_INDEPENDENT_CODE TRUE)
 
+if(NOT BUILD_PLUGIN_WITH_ROS)
+    set(BUILD_PLUGIN_WITH_ROS TRUE)
+endif()
 
+if(BUILD_PLUGIN_WITH_ROS)
+    add_definitions(-DBUILD_WITH_ROS)
+endif()

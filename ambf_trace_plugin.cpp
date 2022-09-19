@@ -82,6 +82,22 @@ class afTracePlugin: public afSimulatorPlugin{
         // set static traces (e.g. goal_points)
         m_static_trace = new cMultiSegment(); //TODO: probably should allow creation of multiple, and have a list of pointers as class variable
         if(!csv_filename_static_traces.empty()){
+            std::string envpath;
+            // Substitute env variable if passed in
+            size_t begin = csv_filename_static_traces.find("$");
+            if (begin != std::string::npos) {           /* contains '$'? */
+                size_t end = csv_filename_static_traces.find("/", begin);     /* find following '/' */
+                // Extract environment variable from line
+                std::string envvar = csv_filename_static_traces.substr (begin + 1, end - 1);
+                // Get from environment (NULL returned if it does not exist)
+                if (const char *envtmp = std::getenv(envvar.c_str()))
+                    envpath = envtmp;
+                else {
+                    std::cerr << "error: $" << envvar << " not in environment.\n";
+                }
+                // Replace variable name with contents in line
+                csv_filename_static_traces.replace (begin, end, envpath);
+            }
             set_and_add_static_trace(csv_filename_static_traces, m_static_trace);
         }
 

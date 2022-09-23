@@ -66,11 +66,12 @@ cd <ambf_exe_dir>
 ### Input args
 1. ```--name_body_to_trace arg``` : Name of body in ADF yaml which will have position traced. No body trace if blank (default)
 2. ```--csv_filename_static_traces arg``` : Path to CSV file with 3d points for static trace. No static trace if blank (default)
-
+2. ```--static_trace_rel_body_name arg``` : Name of body given in ADF yaml for static trace to be relative to. Relative to world origin if blank (default)
 ### Keyboard commands
 (KP means keypad)
 1. ```[Ctrl + KP*]``` : start/stop tracing specified body
 2. ```[Ctrl + KP-]``` : show/hide body traces
+2. ```[Ctrl + KP0]``` : reload static trace from file
 
 ### Starting from launch file
 A launch.yaml file can by used to set many simulator parameters at once (world configs, input devices, multibody configs, etc.). You can also add plugins using the following, which would be placed in some ```<launch_file.yaml>```
